@@ -4,12 +4,14 @@ import { Sparkles, Database, Calculator, CheckCircle } from "lucide-react";
 
 interface LoadingScreenProps {
   onComplete: () => void;
+  useLeneda?: boolean;
 }
 
-export function LoadingScreen({ onComplete }: LoadingScreenProps) {
+export function LoadingScreen({ onComplete, useLeneda = false }: LoadingScreenProps) {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const steps = [
+  // Different steps based on whether Leneda is used
+  const steps = useLeneda ? [
     {
       icon: Database,
       text: "Fetching Leneda data",
@@ -19,6 +21,22 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
       icon: Calculator,
       text: "Computing optimal investment",
       duration: 2000,
+    },
+    {
+      icon: CheckCircle,
+      text: "Finalizing recommendations",
+      duration: 1000,
+    },
+  ] : [
+    {
+      icon: Calculator,
+      text: "Preparing simulation",
+      duration: 2500,
+    },
+    {
+      icon: Sparkles,
+      text: "Computing optimal investment",
+      duration: 1500,
     },
     {
       icon: CheckCircle,

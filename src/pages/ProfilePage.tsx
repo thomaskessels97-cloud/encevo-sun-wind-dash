@@ -55,7 +55,7 @@ export default function ProfilePage() {
 
   // Show loading screen overlay
   if (isLoading) {
-    return <LoadingScreen onComplete={handleLoadingComplete} />;
+    return <LoadingScreen onComplete={handleLoadingComplete} useLeneda={dataMode === "pod"} />;
   }
   const toggleObjective = (objective: string) => {
     setProfile(prev => ({

@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle, Sun, TrendingUp, Leaf, Shield, ArrowRight, Battery, Wind } from "lucide-react";
+import { CheckCircle, Sun, TrendingUp, Leaf, Shield, ArrowRight, Battery, Wind, CreditCard, Calendar } from "lucide-react";
 
 // Project data (same as in OpportunitiesPage)
 const projects = [
@@ -19,6 +20,13 @@ export default function ConfirmationPage() {
   const aiSelections = location.state?.aiSelections || [];
   const totalInvestment = location.state?.totalInvestment || 0;
   const recommendations = location.state?.recommendations;
+
+  const [paymentMethod, setPaymentMethod] = useState<"one-off" | "monthly">("one-off");
+  const [monthlyAmount, setMonthlyAmount] = useState(200);
+
+  const minMonthlyAmount = 200;
+  const maxMonthlyAmount = totalInvestment;
+  const monthsRequired = Math.ceil(totalInvestment / monthlyAmount);
 
   // Calculate aggregate metrics
   const totalReturn = aiSelections.reduce((sum: number, selection: any) => {
@@ -151,6 +159,107 @@ export default function ConfirmationPage() {
         </div>
       </Card>
 
+      {/* Payment Options */}
+      <Card className="p-8 space-y-6">
+        <div>
+          <h2 className="text-xl font-bold mb-1">Choose Your Payment Method</h2>
+          <p className="text-muted-foreground">Select how you'd like to invest</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* One-off Payment */}
+          <button
+            onClick={() => setPaymentMethod("one-off")}
+            className={`p-6 rounded-lg border-2 transition-all text-left ${
+              paymentMethod === "one-off"
+                ? "border-primary bg-primary/5"
+                : "border-border hover:border-primary/50"
+            }`}
+          >
+            <div className="flex items-start gap-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                paymentMethod === "one-off" ? "bg-primary text-white" : "bg-muted"
+              }`}>
+                <CreditCard className="w-5 h-5" />
+              </div>
+              <div className="flex-1 space-y-2">
+                <div className="font-semibold text-lg">One-off Investment</div>
+                <p className="text-sm text-muted-foreground">
+                  Pay the full amount now and start earning returns immediately
+                </p>
+                <div className="text-2xl font-bold text-primary pt-2">
+                  €{totalInvestment.toLocaleString()}
+                </div>
+              </div>
+            </div>
+          </button>
+
+          {/* Monthly Investment Plan */}
+          <button
+            onClick={() => setPaymentMethod("monthly")}
+            className={`p-6 rounded-lg border-2 transition-all text-left ${
+              paymentMethod === "monthly"
+                ? "border-primary bg-primary/5"
+                : "border-border hover:border-primary/50"
+            }`}
+          >
+            <div className="flex items-start gap-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                paymentMethod === "monthly" ? "bg-primary text-white" : "bg-muted"
+              }`}>
+                <Calendar className="w-5 h-5" />
+              </div>
+              <div className="flex-1 space-y-2">
+                <div className="font-semibold text-lg">Monthly Investment Plan</div>
+                <p className="text-sm text-muted-foreground">
+                  Spread your investment over time with monthly payments
+                </p>
+                <div className="text-2xl font-bold text-primary pt-2">
+                  €{monthlyAmount.toLocaleString()}/month
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {monthsRequired} {monthsRequired === 1 ? "month" : "months"} • Min. €200/month
+                </p>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Monthly Amount Selector */}
+        {paymentMethod === "monthly" && (
+          <div className="pt-4 space-y-4 border-t">
+            <div>
+              <label className="text-sm font-medium mb-2 block">
+                Adjust Monthly Amount
+              </label>
+              <input
+                type="range"
+                min={minMonthlyAmount}
+                max={maxMonthlyAmount}
+                step={50}
+                value={monthlyAmount}
+                onChange={(e) => setMonthlyAmount(Number(e.target.value))}
+                className="w-full"
+              />
+              <div className="flex justify-between text-sm text-muted-foreground mt-2">
+                <span>€{minMonthlyAmount}</span>
+                <span className="font-semibold text-primary">€{monthlyAmount.toLocaleString()}</span>
+                <span>€{maxMonthlyAmount.toLocaleString()}</span>
+              </div>
+            </div>
+            <div className="p-4 bg-muted/50 rounded-lg">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Total Investment Period:</span>
+                <span className="font-bold">{monthsRequired} {monthsRequired === 1 ? "month" : "months"}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Your returns will begin accumulating as each monthly payment is invested
+              </p>
+            </div>
+          </div>
+        )}
+      </Card>
+
       {/* Impact Visualization */}
       <Card className="p-8 space-y-6 bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5">
         <h2 className="text-xl font-bold">Your Investment Impact</h2>
@@ -201,7 +310,10 @@ export default function ConfirmationPage() {
         </Link>
         <Link to="/dashboard" className="flex-1">
           <Button className="w-full bg-primary hover:bg-primary-dark text-lg h-12">
-            Confirm Investment
+            {paymentMethod === "one-off" 
+              ? `Confirm Investment - €${totalInvestment.toLocaleString()}`
+              : `Start Monthly Plan - €${monthlyAmount}/month`
+            }
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
         </Link>

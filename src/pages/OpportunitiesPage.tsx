@@ -89,45 +89,30 @@ export default function OpportunitiesPage() {
   const [selectedProjects, setSelectedProjects] = useState<number[]>([]);
   const [mode, setMode] = useState<"ai" | "manual">("ai");
 
-  // AI pre-selects projects based on recommendations
+  // AI pre-selects projects based on recommendations - ensures at least 2 projects per type
   const aiSelections = recommendations ? (() => {
     const selections: { projectId: number; amount: number }[] = [];
     
-    // Allocate solar budget
-    let remainingSolar = recommendations.solar.investment;
-    const solarUnits1 = Math.floor(remainingSolar / 1250);
-    if (solarUnits1 > 0) {
-      selections.push({ projectId: 1, amount: solarUnits1 * 1250 });
-      remainingSolar -= solarUnits1 * 1250;
-    }
-    if (remainingSolar >= 1500) {
-      selections.push({ projectId: 4, amount: 1500 });
-      remainingSolar -= 1500;
-    }
+    // Allocate solar budget across 2 projects (1 and 4)
+    const solarBudget = recommendations.solar.investment;
+    const solar1Amount = Math.floor(solarBudget * 0.6 / 1250) * 1250; // 60% to project 1
+    const solar4Amount = solarBudget - solar1Amount; // Remaining to project 4
+    if (solar1Amount > 0) selections.push({ projectId: 1, amount: solar1Amount });
+    if (solar4Amount > 0) selections.push({ projectId: 4, amount: solar4Amount });
     
-    // Allocate battery budget
-    let remainingBattery = recommendations.battery.investment;
-    const batteryUnits2 = Math.floor(remainingBattery / 750);
-    if (batteryUnits2 > 0) {
-      selections.push({ projectId: 2, amount: batteryUnits2 * 750 });
-      remainingBattery -= batteryUnits2 * 750;
-    }
-    if (remainingBattery >= 1200) {
-      selections.push({ projectId: 5, amount: 1200 });
-      remainingBattery -= 1200;
-    }
+    // Allocate battery budget across 2 projects (2 and 5)
+    const batteryBudget = recommendations.battery.investment;
+    const battery2Amount = Math.floor(batteryBudget * 0.5 / 750) * 750; // 50% to project 2
+    const battery5Amount = batteryBudget - battery2Amount; // Remaining to project 5
+    if (battery2Amount > 0) selections.push({ projectId: 2, amount: battery2Amount });
+    if (battery5Amount > 0) selections.push({ projectId: 5, amount: battery5Amount });
     
-    // Allocate wind budget
-    let remainingWind = recommendations.wind.investment;
-    const windUnits3 = Math.floor(remainingWind / 850);
-    if (windUnits3 > 0) {
-      selections.push({ projectId: 3, amount: windUnits3 * 850 });
-      remainingWind -= windUnits3 * 850;
-    }
-    if (remainingWind >= 1100) {
-      selections.push({ projectId: 6, amount: 1100 });
-      remainingWind -= 1100;
-    }
+    // Allocate wind budget across 2 projects (3 and 6)
+    const windBudget = recommendations.wind.investment;
+    const wind3Amount = Math.floor(windBudget * 0.6 / 850) * 850; // 60% to project 3
+    const wind6Amount = windBudget - wind3Amount; // Remaining to project 6
+    if (wind3Amount > 0) selections.push({ projectId: 3, amount: wind3Amount });
+    if (wind6Amount > 0) selections.push({ projectId: 6, amount: wind6Amount });
     
     return selections;
   })() : [];
@@ -264,7 +249,7 @@ export default function OpportunitiesPage() {
                 <Link to="/confirmation" state={{ aiSelections, totalInvestment: totalAIInvestment, recommendations }} className="flex-1">
                   <Button className="w-full bg-primary hover:bg-primary-dark">
                     <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Proceed with AI Selection
+                    Proceed with personalized suggestion
                   </Button>
                 </Link>
                 <Button variant="outline" onClick={() => setMode("manual")}>
@@ -276,14 +261,12 @@ export default function OpportunitiesPage() {
         </Card>
       )}
 
-      {/* Filters */}
-      <div className="space-y-4">
-
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">
-            {recommendations && mode === "ai" ? "AI-Recommended Projects (Pre-Selected)" : "Available Projects"}
-          </h2>
-        </div>
+      {/* Filters - only show when in manual mode or no recommendations */}
+      {(!recommendations || mode === "manual") && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Available Projects</h2>
+          </div>
         <div className="flex gap-2 flex-wrap">
           <Button
             variant={filter === "all" ? "default" : "outline"}
@@ -312,11 +295,13 @@ export default function OpportunitiesPage() {
             <Wind className="w-4 h-4 mr-2" />
             Wind
           </Button>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Projects Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Projects Grid - only show when in manual mode or no recommendations */}
+      {(!recommendations || mode === "manual") && (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProjects.map((project) => {
           const Icon = getIcon(project.type);
           const isAISelected = recommendations && getAISelectedAmount(project.id) > 0;
@@ -397,7 +382,8 @@ export default function OpportunitiesPage() {
             </Card>
           );
         })}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

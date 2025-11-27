@@ -12,9 +12,9 @@ export interface LoadProfileDataPoint {
 
 // POD ending with 1: Family profile
 const familyProfileData: LoadProfileDataPoint[] = [
-  { hour: "0",  solar: 0.0, wind: 0.5, battery: 0.2, consumption: 0.6 },
-  { hour: "1",  solar: 0.0, wind: 0.5, battery: 0.2, consumption: 0.5 },
-  { hour: "2",  solar: 0.0, wind: 0.5, battery: 0.1, consumption: 0.5 },
+  { hour: "0",  solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.6 },
+  { hour: "1",  solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.5 },
+  { hour: "2",  solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.5 },
   { hour: "3",  solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.4 },
   { hour: "4",  solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.4 },
   { hour: "5",  solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.5 },
@@ -28,20 +28,20 @@ const familyProfileData: LoadProfileDataPoint[] = [
   { hour: "13", solar: 1.4, wind: 0.4, battery: 0.0, consumption: 0.8 },
   { hour: "14", solar: 1.2, wind: 0.4, battery: 0.0, consumption: 0.8 },
   { hour: "15", solar: 1.0, wind: 0.5, battery: 0.0, consumption: 0.9 },
-  { hour: "16", solar: 0.7, wind: 0.5, battery: 0.1, consumption: 1.0 },
-  { hour: "17", solar: 0.4, wind: 0.6, battery: 0.3, consumption: 1.3 },
-  { hour: "18", solar: 0.2, wind: 0.6, battery: 0.4, consumption: 1.5 },
-  { hour: "19", solar: 0.0, wind: 0.6, battery: 0.5, consumption: 1.4 },
-  { hour: "20", solar: 0.0, wind: 0.6, battery: 0.4, consumption: 1.2 },
-  { hour: "21", solar: 0.0, wind: 0.6, battery: 0.3, consumption: 1.0 },
-  { hour: "22", solar: 0.0, wind: 0.6, battery: 0.2, consumption: 0.9 },
-  { hour: "23", solar: 0.0, wind: 0.5, battery: 0.2, consumption: 0.7 },
+  { hour: "16", solar: 0.7, wind: 0.5, battery: 0.0, consumption: 1.0 },
+  { hour: "17", solar: 0.4, wind: 0.6, battery: 0.0, consumption: 1.3 },
+  { hour: "18", solar: 0.2, wind: 0.6, battery: 0.0, consumption: 1.5 },
+  { hour: "19", solar: 0.0, wind: 0.6, battery: 0.0, consumption: 1.4 },
+  { hour: "20", solar: 0.0, wind: 0.6, battery: 0.0, consumption: 1.2 },
+  { hour: "21", solar: 0.0, wind: 0.6, battery: 0.0, consumption: 1.0 },
+  { hour: "22", solar: 0.0, wind: 0.6, battery: 0.0, consumption: 0.9 },
+  { hour: "23", solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.7 },
 ];
 
 // POD ending with 2: Single mom profile
 const singleMomProfileData: LoadProfileDataPoint[] = [
-  { hour: "0",  solar: 0.0, wind: 0.4, battery: 0.1, consumption: 0.3 },
-  { hour: "1",  solar: 0.0, wind: 0.4, battery: 0.1, consumption: 0.3 },
+  { hour: "0",  solar: 0.0, wind: 0.4, battery: 0.0, consumption: 0.3 },
+  { hour: "1",  solar: 0.0, wind: 0.4, battery: 0.0, consumption: 0.3 },
   { hour: "2",  solar: 0.0, wind: 0.4, battery: 0.0, consumption: 0.3 },
   { hour: "3",  solar: 0.0, wind: 0.4, battery: 0.0, consumption: 0.3 },
   { hour: "4",  solar: 0.0, wind: 0.4, battery: 0.0, consumption: 0.3 },
@@ -55,15 +55,15 @@ const singleMomProfileData: LoadProfileDataPoint[] = [
   { hour: "12", solar: 1.3, wind: 0.3, battery: 0.0, consumption: 0.6 },
   { hour: "13", solar: 1.2, wind: 0.3, battery: 0.0, consumption: 0.6 },
   { hour: "14", solar: 1.0, wind: 0.3, battery: 0.0, consumption: 0.6 },
-  { hour: "15", solar: 0.8, wind: 0.4, battery: 0.1, consumption: 0.7 },
-  { hour: "16", solar: 0.5, wind: 0.4, battery: 0.2, consumption: 0.8 },
-  { hour: "17", solar: 0.3, wind: 0.5, battery: 0.3, consumption: 1.0 },
-  { hour: "18", solar: 0.1, wind: 0.5, battery: 0.4, consumption: 1.1 },
-  { hour: "19", solar: 0.0, wind: 0.5, battery: 0.4, consumption: 1.0 },
-  { hour: "20", solar: 0.0, wind: 0.5, battery: 0.3, consumption: 0.9 },
-  { hour: "21", solar: 0.0, wind: 0.4, battery: 0.2, consumption: 0.8 },
-  { hour: "22", solar: 0.0, wind: 0.4, battery: 0.1, consumption: 0.6 },
-  { hour: "23", solar: 0.0, wind: 0.4, battery: 0.1, consumption: 0.4 },
+  { hour: "15", solar: 0.8, wind: 0.4, battery: 0.0, consumption: 0.7 },
+  { hour: "16", solar: 0.5, wind: 0.4, battery: 0.0, consumption: 0.8 },
+  { hour: "17", solar: 0.3, wind: 0.5, battery: 0.0, consumption: 1.0 },
+  { hour: "18", solar: 0.1, wind: 0.5, battery: 0.0, consumption: 1.1 },
+  { hour: "19", solar: 0.0, wind: 0.5, battery: 0.0, consumption: 1.0 },
+  { hour: "20", solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.9 },
+  { hour: "21", solar: 0.0, wind: 0.4, battery: 0.0, consumption: 0.8 },
+  { hour: "22", solar: 0.0, wind: 0.4, battery: 0.0, consumption: 0.6 },
+  { hour: "23", solar: 0.0, wind: 0.4, battery: 0.0, consumption: 0.4 },
 ];
 
 // POD ending with 3: Garage/business profile
@@ -96,11 +96,11 @@ const garageProfileData: LoadProfileDataPoint[] = [
 
 // POD ending with 4: Single man profile
 const singleManProfileData: LoadProfileDataPoint[] = [
-  { hour: "0",  solar: 0.0, wind: 0.6, battery: 0.3, consumption: 0.7 },
-  { hour: "1",  solar: 0.0, wind: 0.6, battery: 0.3, consumption: 0.7 },
-  { hour: "2",  solar: 0.0, wind: 0.6, battery: 0.2, consumption: 0.6 },
-  { hour: "3",  solar: 0.0, wind: 0.6, battery: 0.1, consumption: 0.5 },
-  { hour: "4",  solar: 0.0, wind: 0.5, battery: 0.1, consumption: 0.4 },
+  { hour: "0",  solar: 0.0, wind: 0.6, battery: 0.0, consumption: 0.7 },
+  { hour: "1",  solar: 0.0, wind: 0.6, battery: 0.0, consumption: 0.7 },
+  { hour: "2",  solar: 0.0, wind: 0.6, battery: 0.0, consumption: 0.6 },
+  { hour: "3",  solar: 0.0, wind: 0.6, battery: 0.0, consumption: 0.5 },
+  { hour: "4",  solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.4 },
   { hour: "5",  solar: 0.0, wind: 0.5, battery: 0.0, consumption: 0.4 },
   { hour: "6",  solar: 0.1, wind: 0.5, battery: 0.0, consumption: 0.5 },
   { hour: "7",  solar: 0.3, wind: 0.4, battery: 0.0, consumption: 0.5 },
@@ -111,15 +111,15 @@ const singleManProfileData: LoadProfileDataPoint[] = [
   { hour: "12", solar: 1.5, wind: 0.4, battery: 0.0, consumption: 0.6 },
   { hour: "13", solar: 1.4, wind: 0.4, battery: 0.0, consumption: 0.6 },
   { hour: "14", solar: 1.2, wind: 0.4, battery: 0.0, consumption: 0.6 },
-  { hour: "15", solar: 0.9, wind: 0.5, battery: 0.1, consumption: 0.7 },
-  { hour: "16", solar: 0.6, wind: 0.5, battery: 0.2, consumption: 0.8 },
-  { hour: "17", solar: 0.3, wind: 0.6, battery: 0.3, consumption: 0.9 },
-  { hour: "18", solar: 0.2, wind: 0.7, battery: 0.4, consumption: 1.0 },
-  { hour: "19", solar: 0.0, wind: 0.7, battery: 0.5, consumption: 1.1 },
-  { hour: "20", solar: 0.0, wind: 0.7, battery: 0.5, consumption: 1.1 },
-  { hour: "21", solar: 0.0, wind: 0.6, battery: 0.4, consumption: 1.0 },
-  { hour: "22", solar: 0.0, wind: 0.6, battery: 0.3, consumption: 0.8 },
-  { hour: "23", solar: 0.0, wind: 0.6, battery: 0.2, consumption: 0.7 },
+  { hour: "15", solar: 0.9, wind: 0.5, battery: 0.0, consumption: 0.7 },
+  { hour: "16", solar: 0.6, wind: 0.5, battery: 0.0, consumption: 0.8 },
+  { hour: "17", solar: 0.3, wind: 0.6, battery: 0.0, consumption: 0.9 },
+  { hour: "18", solar: 0.2, wind: 0.7, battery: 0.0, consumption: 1.0 },
+  { hour: "19", solar: 0.0, wind: 0.7, battery: 0.0, consumption: 1.1 },
+  { hour: "20", solar: 0.0, wind: 0.7, battery: 0.0, consumption: 1.1 },
+  { hour: "21", solar: 0.0, wind: 0.6, battery: 0.0, consumption: 1.0 },
+  { hour: "22", solar: 0.0, wind: 0.6, battery: 0.0, consumption: 0.8 },
+  { hour: "23", solar: 0.0, wind: 0.6, battery: 0.0, consumption: 0.7 },
 ];
 
 /**
@@ -157,6 +157,17 @@ export function getLoadProfileByPod(podNumber: string): LoadProfileDataPoint[] {
       const profileIndex = digitNum % 4;
       return [familyProfileData, singleMomProfileData, garageProfileData, singleManProfileData][profileIndex];
   }
+}
+
+/**
+ * Calculate battery usage dynamically based on production vs consumption
+ * Battery only activates when solar + wind cannot meet consumption
+ */
+export function calculateBatteryUsage(data: LoadProfileDataPoint[]): LoadProfileDataPoint[] {
+  return data.map(point => ({
+    ...point,
+    battery: Math.max(0, point.consumption - point.solar - point.wind)
+  }));
 }
 
 /**

@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Sun, Battery, Wind, ArrowRight, TrendingUp, Leaf, Shield, Sparkles } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { calculatePortfolioAllocation, generateAlternativeScenarios } from "@/lib/investmentCalculations";
-import { getLoadProfileByPod } from "@/data/loadProfiles";
+import { getLoadProfileByPod, calculateBatteryUsage } from "@/data/loadProfiles";
 
 export default function RecommendationsPage() {
   const location = useLocation();
@@ -36,8 +36,9 @@ export default function RecommendationsPage() {
   // Generate alternative scenarios with dynamic metrics
   const scenarios = generateAlternativeScenarios(allocation, totalInvestment);
 
-  // Get load profile based on POD number
-  const loadProfileData = getLoadProfileByPod(profile.podNumber || "");
+  // Get load profile based on POD number and calculate battery usage dynamically
+  const rawLoadProfile = getLoadProfileByPod(profile.podNumber || "");
+  const loadProfileData = calculateBatteryUsage(rawLoadProfile);
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-20">

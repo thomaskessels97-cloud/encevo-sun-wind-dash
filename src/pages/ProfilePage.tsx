@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowRight, Home, TrendingUp, Leaf, Shield, Info, FileText } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowRight, Home, TrendingUp, Leaf, Shield, Info, FileText, Zap } from "lucide-react";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function ProfilePage() {
     podNumber: "",
     consumption: 3500,
     housingType: "apartment",
+    energyTariff: "fix-naturstroum",
     budget: 5000,
     riskAppetite: "moderate",
     objectives: [] as string[],
@@ -172,38 +174,79 @@ export default function ProfilePage() {
         </Card>
       )}
 
-      {/* Step 2: Housing Type */}
+      {/* Step 2: Housing Type & Energy Tariff */}
       {step === 2 && (
         <Card className="p-8 space-y-6 animate-fade-in">
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold">Housing Type</h2>
-            <p className="text-muted-foreground">What type of property do you live in?</p>
+            <h2 className="text-2xl font-bold">Housing & Energy Details</h2>
+            <p className="text-muted-foreground">Tell us about your property and energy plan</p>
           </div>
 
-          <RadioGroup value={profile.housingType} onValueChange={(value) => setProfile({ ...profile, housingType: value })}>
-            <div className="grid md:grid-cols-2 gap-4">
-              {[
-                { value: "apartment", label: "Apartment", icon: Home, description: "Multi-unit building" },
-                { value: "house", label: "House", icon: Home, description: "Single-family home" },
-                { value: "townhouse", label: "Townhouse", icon: Home, description: "Attached home" },
-                { value: "other", label: "Other", icon: Home, description: "Other property type" },
-              ].map((option) => (
-                <label
-                  key={option.value}
-                  className="flex items-start gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-primary/5"
-                >
-                  <RadioGroupItem value={option.value} className="mt-1" />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <option.icon className="w-5 h-5 text-primary" />
-                      <span className="font-semibold">{option.label}</span>
+          {/* Housing Type */}
+          <div className="space-y-4">
+            <Label className="text-base">Housing Type</Label>
+            <RadioGroup value={profile.housingType} onValueChange={(value) => setProfile({ ...profile, housingType: value })}>
+              <div className="grid md:grid-cols-2 gap-4">
+                {[
+                  { value: "apartment", label: "Apartment", icon: Home, description: "Multi-unit building" },
+                  { value: "house", label: "House", icon: Home, description: "Single-family home" },
+                  { value: "townhouse", label: "Townhouse", icon: Home, description: "Attached home" },
+                  { value: "other", label: "Other", icon: Home, description: "Other property type" },
+                ].map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex items-start gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                  >
+                    <RadioGroupItem value={option.value} className="mt-1" />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <option.icon className="w-5 h-5 text-primary" />
+                        <span className="font-semibold">{option.label}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{option.description}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground">{option.description}</p>
-                  </div>
-                </label>
-              ))}
+                  </label>
+                ))}
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Energy Tariff */}
+          <div className="space-y-4 border-t pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="energy-tariff" className="text-base flex items-center gap-2">
+                <Zap className="w-5 h-5 text-accent" />
+                Current Energy Tariff
+              </Label>
+              <p className="text-sm text-muted-foreground">Select your current Naturstroum plan</p>
             </div>
-          </RadioGroup>
+            
+            <Select 
+              value={profile.energyTariff} 
+              onValueChange={(value) => setProfile({ ...profile, energyTariff: value })}
+            >
+              <SelectTrigger id="energy-tariff" className="w-full">
+                <SelectValue placeholder="Select your tariff" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fix-naturstroum">Fix Naturstroum</SelectItem>
+                <SelectItem value="dynamic-naturstroum">Dynamic Naturstroum</SelectItem>
+                <SelectItem value="naturstroum-drive">Naturstroum Drive</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Calculix Info */}
+            <div className="bg-muted/50 rounded-lg p-4 space-y-2 border border-border/50">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Info className="w-4 h-4 text-accent" />
+                <span>Tariff Data Integration</span>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                We will retrieve your tariff data from Calculix and take this into consideration 
+                for computing your personalized investment recommendations and estimated returns.
+              </p>
+            </div>
+          </div>
         </Card>
       )}
 

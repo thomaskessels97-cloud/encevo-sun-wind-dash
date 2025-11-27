@@ -5,7 +5,7 @@ import { Sun, Battery, Wind, TrendingUp, Leaf, DollarSign, AlertCircle, Plus } f
 import { Link, useLocation } from "react-router-dom";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { useEffect, useState } from "react";
-import { getLoadProfileByPod } from "@/data/loadProfiles";
+import { getLoadProfileByPod, calculateBatteryUsage } from "@/data/loadProfiles";
 
 export default function DashboardPage() {
   const location = useLocation();
@@ -42,8 +42,10 @@ export default function DashboardPage() {
   };
 
   // Get load profile data - use from portfolio or regenerate from POD
-  const loadProfileData = portfolioData?.loadProfileData || 
+  // Always recalculate battery usage to ensure it's correct
+  const rawLoadProfile = portfolioData?.loadProfileData || 
     getLoadProfileByPod(portfolioData?.profile?.podNumber || "");
+  const loadProfileData = calculateBatteryUsage(rawLoadProfile);
 
   const investments = [
     {

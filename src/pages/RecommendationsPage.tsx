@@ -175,9 +175,12 @@ export default function RecommendationsPage() {
       {/* Load Profile Chart */}
       <Card className="p-8 space-y-6">
         <div>
-          <h2 className="text-2xl font-bold mb-2">Your Energy Load Profile</h2>
-          <p className="text-muted-foreground">
-            24-hour overview comparing your investment's production with actual consumption
+          <h2 className="text-2xl font-bold mb-2">Your Target Load Profile</h2>
+          <p className="text-muted-foreground mb-2">
+            24-hour overview comparing your investment&apos;s production with actual consumption
+          </p>
+          <p className="text-sm text-muted-foreground italic">
+            <strong>Note:</strong> This profile represents your target on good days and will of course depend on outside conditions (weather, seasonality). The current set-up is designed to optimize your overall year performance.
           </p>
         </div>
         

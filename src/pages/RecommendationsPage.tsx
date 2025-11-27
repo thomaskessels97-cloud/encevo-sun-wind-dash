@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sun, Battery, Wind, ArrowRight, TrendingUp, Leaf, Shield } from "lucide-react";
+import { Sun, Battery, Wind, ArrowRight, TrendingUp, Leaf, Shield, Sparkles } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 export default function RecommendationsPage() {
@@ -144,6 +144,44 @@ export default function RecommendationsPage() {
             </div>
           </div>
         </div>
+
+        {/* AI Explanation */}
+        <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+          <div className="flex gap-4">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-primary" />
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold">AI Assistant Recommendation</h3>
+              </div>
+              <div className="text-sm space-y-2 text-muted-foreground">
+                <p>
+                  I've optimized this energy mix based on your profile to maximize both returns and energy autonomy:
+                </p>
+                <ul className="space-y-2 ml-4">
+                  <li className="flex gap-2">
+                    <Sun className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                    <span><strong>Solar panels (50%)</strong> provide peak production during daylight hours and offer the most cost-effective energy generation per euro invested.</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <Battery className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
+                    <span><strong>Battery storage (30%)</strong> charges during the day when solar production is high, then covers evening demand gaps that wind cannot fully meet.</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <Wind className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                    <span><strong>Wind energy (20%)</strong> provides consistent baseline production throughout day and night, balancing your portfolio with steady returns.</span>
+                  </li>
+                </ul>
+                <p className="pt-2 italic">
+                  <strong>Note:</strong> If you switch to a dynamic tariff in the future, I would recommend shifting focus toward battery storage to capitalize on peak-hour pricing arbitrage opportunities.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
       </Card>
 
       {/* Load Profile Chart */}

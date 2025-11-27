@@ -2,12 +2,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Zap, Leaf, MapPin, TrendingUp, Award } from "lucide-react";
 import LuxembourgMap from "@/components/LuxembourgMap";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
 
 export default function CommunityPage() {
-  const [mapboxToken, setMapboxToken] = useState("");
   const communityStats = {
     totalInvestors: 12847,
     totalMW: 245.8,
@@ -81,38 +77,8 @@ export default function CommunityPage() {
           <MapPin className="w-6 h-6 text-primary" />
         </div>
 
-        {/* Mapbox Token Input (temporary) */}
-        {!mapboxToken && (
-          <div className="space-y-2 p-4 bg-muted rounded-lg">
-            <Label htmlFor="mapbox-token" className="text-sm font-medium">
-              Enter your Mapbox Public Token
-            </Label>
-            <div className="flex gap-2">
-              <Input
-                id="mapbox-token"
-                type="text"
-                placeholder="pk.eyJ1..."
-                value={mapboxToken}
-                onChange={(e) => setMapboxToken(e.target.value)}
-                className="flex-1"
-              />
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Get your token at{" "}
-              <a
-                href="https://mapbox.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                mapbox.com
-              </a>
-            </p>
-          </div>
-        )}
-
-        {/* Interactive Map */}
-        <LuxembourgMap apiKey={mapboxToken} />
+        {/* Static Map with Project Pins */}
+        <LuxembourgMap />
 
         {/* Regional Breakdown */}
         <div className="grid md:grid-cols-2 gap-4">

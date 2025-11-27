@@ -25,7 +25,7 @@ export default function Layout() {
                 <span className="text-white font-bold text-lg">E</span>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Encevo Energy
+                EncInvest
               </span>
             </div>
 

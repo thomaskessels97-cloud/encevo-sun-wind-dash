@@ -308,7 +308,18 @@ export default function ConfirmationPage() {
             Back to Projects
           </Button>
         </Link>
-        <Link to="/dashboard" className="flex-1">
+        <Link 
+          to="/dashboard" 
+          state={{ 
+            portfolio: { 
+              totalInvestment, 
+              recommendations,
+              paymentMethod,
+              monthlyAmount: paymentMethod === "monthly" ? monthlyAmount : null
+            } 
+          }} 
+          className="flex-1"
+        >
           <Button className="w-full bg-primary hover:bg-primary-dark text-lg h-12">
             {paymentMethod === "one-off" 
               ? `Confirm Investment - €${totalInvestment.toLocaleString()}`

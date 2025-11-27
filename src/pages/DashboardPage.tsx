@@ -2,15 +2,41 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sun, Battery, Wind, TrendingUp, Leaf, DollarSign, AlertCircle, Plus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
+  const location = useLocation();
+  
+  // Get investment data from navigation state or localStorage
+  const [portfolioData, setPortfolioData] = useState(() => {
+    const savedData = localStorage.getItem('portfolioData');
+    return savedData ? JSON.parse(savedData) : null;
+  });
+
+  // Update portfolio data when arriving from confirmation
+  useEffect(() => {
+    if (location.state?.portfolio) {
+      const newPortfolio = location.state.portfolio;
+      setPortfolioData(newPortfolio);
+      localStorage.setItem('portfolioData', JSON.stringify(newPortfolio));
+    }
+  }, [location.state]);
+
+  // Use saved portfolio data or default values
+  const totalInvestment = portfolioData?.totalInvestment || 5000;
+  const recommendations = portfolioData?.recommendations || {
+    solar: { percentage: 50, investment: 2500 },
+    battery: { percentage: 30, investment: 1500 },
+    wind: { percentage: 20, investment: 1000 },
+  };
+
   const portfolio = {
-    totalValue: 5000,
-    totalReturn: 325,
+    totalValue: totalInvestment,
+    totalReturn: Math.round(totalInvestment * 0.065), // 6.5% average return
     returnPercentage: 6.5,
-    co2Saved: 4.5,
+    co2Saved: (totalInvestment / 1000) * 0.9, // Approximate CO2 calculation
     autonomy: 65,
   };
 
@@ -20,9 +46,9 @@ export default function DashboardPage() {
       name: "Luxembourg Solar Park Phase 2",
       type: "solar",
       icon: Sun,
-      capacity: "2.5 kWc",
-      invested: 1250,
-      currentValue: 1340,
+      capacity: ((recommendations.solar.investment / 1111 / 2).toFixed(1)) + " kWc",
+      invested: Math.round(recommendations.solar.investment * 0.6),
+      currentValue: Math.round(recommendations.solar.investment * 0.6 * 1.07),
       return: 7.2,
       status: "active",
     },
@@ -31,9 +57,9 @@ export default function DashboardPage() {
       name: "Community Battery Storage",
       type: "battery",
       icon: Battery,
-      capacity: "5 kWh",
-      invested: 750,
-      currentValue: 795,
+      capacity: ((recommendations.battery.investment / 625 / 2).toFixed(0)) + " kWh",
+      invested: Math.round(recommendations.battery.investment * 0.5),
+      currentValue: Math.round(recommendations.battery.investment * 0.5 * 1.06),
       return: 6.0,
       status: "active",
     },
@@ -42,9 +68,9 @@ export default function DashboardPage() {
       name: "Northern Wind Farm",
       type: "wind",
       icon: Wind,
-      capacity: "1.5 kW",
-      invested: 850,
-      currentValue: 905,
+      capacity: ((recommendations.wind.investment / 2500 / 2).toFixed(1)) + " kW",
+      invested: Math.round(recommendations.wind.investment * 0.6),
+      currentValue: Math.round(recommendations.wind.investment * 0.6 * 1.065),
       return: 6.5,
       status: "active",
     },
@@ -96,11 +122,38 @@ export default function DashboardPage() {
     { hour: "23", solar: 0.0, wind: 0.5, battery: 0.2, consumption: 0.7 },
   ];
 
-  // Asset ownership breakdown
+  // Asset ownership breakdown - uses actual investment percentages
   const assetsOwned = [
-    { type: "Solar", icon: Sun, capacity: "2.5 kWc", percentage: 50, amount: 2500, color: "accent", currentPrice: 520, priceChange: 4.2 },
-    { type: "Battery", icon: Battery, capacity: "5 kWh", percentage: 30, amount: 1500, color: "secondary", currentPrice: 162, priceChange: -1.8 },
-    { type: "Wind", icon: Wind, capacity: "1.5 kW", percentage: 20, amount: 1000, color: "primary", currentPrice: 680, priceChange: 2.5 },
+    { 
+      type: "Solar", 
+      icon: Sun, 
+      capacity: ((recommendations.solar.investment / 1111).toFixed(1)) + " kWc", 
+      percentage: recommendations.solar.percentage, 
+      amount: recommendations.solar.investment, 
+      color: "accent", 
+      currentPrice: Math.round(recommendations.solar.investment * 1.04), 
+      priceChange: 4.2 
+    },
+    { 
+      type: "Battery", 
+      icon: Battery, 
+      capacity: ((recommendations.battery.investment / 625).toFixed(0)) + " kWh", 
+      percentage: recommendations.battery.percentage, 
+      amount: recommendations.battery.investment, 
+      color: "secondary", 
+      currentPrice: Math.round(recommendations.battery.investment * 0.98), 
+      priceChange: -1.8 
+    },
+    { 
+      type: "Wind", 
+      icon: Wind, 
+      capacity: ((recommendations.wind.investment / 2500).toFixed(1)) + " kW", 
+      percentage: recommendations.wind.percentage, 
+      amount: recommendations.wind.investment, 
+      color: "primary", 
+      currentPrice: Math.round(recommendations.wind.investment * 1.025), 
+      priceChange: 2.5 
+    },
   ];
 
   return (

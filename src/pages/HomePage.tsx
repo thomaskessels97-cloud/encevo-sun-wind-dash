@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TrendingUp, Shield, Leaf, LayoutDashboard, ArrowRight, Zap, Users, Award } from "lucide-react";
+import { TrendingUp, Shield, Leaf, LayoutDashboard, ArrowRight, Zap, Users, Award, MapPin, Handshake } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -148,6 +148,77 @@ export default function HomePage() {
           </div>
         </div>
       </Card>
+
+      {/* Partner Invitation */}
+      <div className="space-y-6">
+        <div className="text-center space-y-2">
+          <h2 className="text-3xl font-bold">Join as a Partner</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Are you a land owner or cooperative looking to collaborate on renewable energy projects?
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <Card className="p-8 space-y-6 hover:shadow-xl transition-all border-2 hover:border-accent">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center">
+              <MapPin className="w-8 h-8 text-white" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold">Land Owners</h3>
+              <p className="text-muted-foreground">
+                Have land suitable for renewable energy projects? Partner with us to develop solar, wind, or battery installations.
+              </p>
+            </div>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                <span>Long-term sustainable land use</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                <span>Recurring revenue opportunities</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                <span>Contribute to renewable energy transition</span>
+              </li>
+            </ul>
+            <Button size="lg" className="w-full" variant="outline">
+              Learn More
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </Card>
+
+          <Card className="p-8 space-y-6 hover:shadow-xl transition-all border-2 hover:border-success">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-success to-success/70 flex items-center justify-center">
+              <Handshake className="w-8 h-8 text-white" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold">Cooperatives</h3>
+              <p className="text-muted-foreground">
+                Have a renewable project idea? Connect with our investor network and benefit from our operational expertise.
+              </p>
+            </div>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />
+                <span>Access to investor community</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />
+                <span>Strong partner with proven track record</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />
+                <span>End-to-end project support</span>
+              </li>
+            </ul>
+            <Button size="lg" className="w-full" variant="outline">
+              Propose a Project
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </Card>
+        </div>
+      </div>
 
       {/* CTA Section */}
       <Card className="p-12 bg-gradient-primary text-white text-center">

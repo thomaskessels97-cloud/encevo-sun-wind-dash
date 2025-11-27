@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, Home, TrendingUp, Leaf, Shield, Info, FileText, Zap } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowRight, Home, TrendingUp, Leaf, Shield, Info, FileText, Zap, CheckCircle2 } from "lucide-react";
 import { LoadingScreen } from "@/components/LoadingScreen";
 
 export default function ProfilePage() {
@@ -15,6 +16,7 @@ export default function ProfilePage() {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [dataMode, setDataMode] = useState<"pod" | "manual">("pod");
+  const [lenedaMandate, setLenedaMandate] = useState(false);
   const [profile, setProfile] = useState({
     podNumber: "",
     consumption: 3500,
@@ -26,6 +28,13 @@ export default function ProfilePage() {
   });
 
   const totalSteps = 4;
+
+  // Check if POD is complete (18 characters)
+  const isPodComplete = profile.podNumber.length === 18;
+
+  // Check if user can continue from step 1
+  const canContinueFromStep1 = 
+    dataMode === "manual" || (dataMode === "pod" && isPodComplete && lenedaMandate);
 
   const handleContinue = () => {
     if (step < totalSteps) {
@@ -79,7 +88,14 @@ export default function ProfilePage() {
           {/* Data Mode Selection */}
           <div className="space-y-4">
             <Label className="text-base">How would you like to proceed?</Label>
-            <RadioGroup value={dataMode} onValueChange={(value: "pod" | "manual") => setDataMode(value)}>
+            <RadioGroup 
+              value={dataMode} 
+              onValueChange={(value: "pod" | "manual") => {
+                setDataMode(value);
+                // Reset leneda mandate when switching modes
+                setLenedaMandate(false);
+              }}
+            >
               <div className="grid md:grid-cols-2 gap-4">
                 <label className="flex items-start gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-primary/5">
                   <RadioGroupItem value="pod" className="mt-1" />
@@ -135,6 +151,43 @@ export default function ProfilePage() {
                   to show your energy savings and CO₂ impact.
                 </p>
               </div>
+
+              {/* Leneda Mandate Checkbox - Only shown when POD is complete */}
+              {isPodComplete && (
+                <div className="space-y-4 animate-fade-in border-t pt-4">
+                  <div className="flex items-start gap-3 p-4 rounded-lg border-2 border-primary/20 bg-primary/5">
+                    <Checkbox 
+                      id="leneda-mandate" 
+                      checked={lenedaMandate}
+                      onCheckedChange={(checked) => setLenedaMandate(checked as boolean)}
+                      className="mt-0.5"
+                    />
+                    <div className="flex-1 space-y-1">
+                      <Label 
+                        htmlFor="leneda-mandate" 
+                        className="text-sm font-medium cursor-pointer flex items-center gap-2"
+                      >
+                        <CheckCircle2 className="w-4 h-4 text-primary" />
+                        Provide Leneda mandate
+                      </Label>
+                      <p className="text-sm text-muted-foreground">
+                        I authorize access to my energy data via Leneda for personalized investment recommendations
+                      </p>
+                    </div>
+                  </div>
+
+                  {!lenedaMandate && (
+                    <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3 animate-fade-in">
+                      <p className="text-sm text-amber-800 dark:text-amber-200 flex items-start gap-2">
+                        <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span>
+                          Please provide the Leneda mandate to continue, or switch to <strong>Manual Entry</strong> to proceed without POD validation.
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>}
 
           {/* Manual Consumption Section - Only shown when Manual mode is selected */}
@@ -352,7 +405,11 @@ export default function ProfilePage() {
         {step > 1 && <Button variant="outline" onClick={() => setStep(step - 1)}>
             Back
           </Button>}
-        <Button onClick={handleContinue} className="ml-auto bg-primary hover:bg-primary-dark">
+        <Button 
+          onClick={handleContinue} 
+          className="ml-auto bg-primary hover:bg-primary-dark"
+          disabled={step === 1 && !canContinueFromStep1}
+        >
           {step === totalSteps ? "View Recommendations" : "Continue"}
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>

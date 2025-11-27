@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sun, Battery, Wind, ArrowRight, TrendingUp, Leaf, Shield, Sparkles } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { calculatePortfolioAllocation, generateAlternativeScenarios } from "@/lib/investmentCalculations";
 
 export default function RecommendationsPage() {
   const location = useLocation();
@@ -10,18 +11,29 @@ export default function RecommendationsPage() {
   
   const totalInvestment = profile.budget;
   
+  // Calculate dynamic portfolio allocation based on user profile
+  const allocation = calculatePortfolioAllocation(profile);
+  
   const recommendations = {
-    solar: { capacity: (totalInvestment / 1111).toFixed(1), percentage: 50, investment: Math.round(totalInvestment * 0.5) },
-    battery: { capacity: (totalInvestment / 625).toFixed(0), percentage: 30, investment: Math.round(totalInvestment * 0.3) },
-    wind: { capacity: (totalInvestment / 2500).toFixed(1), percentage: 20, investment: Math.round(totalInvestment * 0.2) },
+    solar: { 
+      capacity: allocation.solar.capacity, 
+      percentage: allocation.solar.percentage, 
+      investment: allocation.solar.investment 
+    },
+    battery: { 
+      capacity: allocation.battery.capacity, 
+      percentage: allocation.battery.percentage, 
+      investment: allocation.battery.investment 
+    },
+    wind: { 
+      capacity: allocation.wind.capacity, 
+      percentage: allocation.wind.percentage, 
+      investment: allocation.wind.investment 
+    },
   };
 
-  const scenarios = [
-    { name: "Current Recommendation", solar: recommendations.solar.percentage, battery: recommendations.battery.percentage, wind: recommendations.wind.percentage, return: 6.5, autonomy: 65, co2: 2.8 },
-    { name: "Max Return", solar: 60, battery: 20, wind: 20, return: 7.8, autonomy: 60, co2: 2.5 },
-    { name: "Max Autonomy", solar: 45, battery: 40, wind: 15, return: 5.2, autonomy: 78, co2: 3.1 },
-    { name: "Most Sustainable", solar: 40, battery: 30, wind: 30, return: 6.0, autonomy: 62, co2: 3.5 },
-  ];
+  // Generate alternative scenarios with dynamic metrics
+  const scenarios = generateAlternativeScenarios(allocation, totalInvestment);
 
   // Mock load profile data (24 hours)
   const loadProfileData = [
@@ -124,21 +136,21 @@ export default function RecommendationsPage() {
           <div className="flex items-center gap-3 p-4 rounded-lg bg-card">
             <TrendingUp className="w-6 h-6 text-primary" />
             <div>
-              <div className="text-xl font-bold">6.5%</div>
+              <div className="text-xl font-bold">{scenarios[0].return}%</div>
               <div className="text-sm text-muted-foreground">Annual Return</div>
             </div>
           </div>
           <div className="flex items-center gap-3 p-4 rounded-lg bg-card">
             <Shield className="w-6 h-6 text-accent" />
             <div>
-              <div className="text-xl font-bold">65%</div>
+              <div className="text-xl font-bold">{scenarios[0].autonomy}%</div>
               <div className="text-sm text-muted-foreground">Energy Autonomy</div>
             </div>
           </div>
           <div className="flex items-center gap-3 p-4 rounded-lg bg-card">
             <Leaf className="w-6 h-6 text-secondary" />
             <div>
-              <div className="text-xl font-bold">2.8t</div>
+              <div className="text-xl font-bold">{scenarios[0].co2}t</div>
               <div className="text-sm text-muted-foreground">CO₂ Saved/Year</div>
             </div>
           </div>
@@ -163,15 +175,15 @@ export default function RecommendationsPage() {
                 <ul className="space-y-2 ml-4">
                   <li className="flex gap-2">
                     <Sun className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                    <span><strong>Solar panels (50%)</strong> provide peak production during daylight hours and offer the most cost-effective energy generation per euro invested.</span>
+                    <span><strong>Solar panels ({recommendations.solar.percentage}%)</strong> provide peak production during daylight hours and offer the most cost-effective energy generation per euro invested.</span>
                   </li>
                   <li className="flex gap-2">
                     <Battery className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
-                    <span><strong>Battery storage (30%)</strong> charges during the day when solar production is high, then covers evening demand gaps that wind cannot fully meet.</span>
+                    <span><strong>Battery storage ({recommendations.battery.percentage}%)</strong> charges during the day when solar production is high, then covers evening demand gaps that wind cannot fully meet.</span>
                   </li>
                   <li className="flex gap-2">
                     <Wind className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                    <span><strong>Wind energy (20%)</strong> provides consistent baseline production throughout day and night, balancing your portfolio with steady returns.</span>
+                    <span><strong>Wind energy ({recommendations.wind.percentage}%)</strong> provides consistent baseline production throughout day and night, balancing your portfolio with steady returns.</span>
                   </li>
                 </ul>
                 <p className="pt-2 italic">

@@ -2,6 +2,45 @@
  * Investment calculation utilities for dynamic portfolio allocation
  */
 
+export interface OptimalInvestment {
+  optimal: number;
+  min: number;
+  max: number;
+  selfConsumptionRate: number;
+  annualConsumption: number;
+}
+
+/**
+ * Calculate optimal investment based on annual consumption
+ * Targets ~65% self-consumption rate for best ROI
+ */
+export function calculateOptimalInvestment(annualConsumption: number): OptimalInvestment {
+  // Luxembourg-specific parameters
+  const SOLAR_PRODUCTION_PER_KWC = 950; // kWh/year in Luxembourg
+  const COST_PER_KWC = 1111; // € per kWc installed
+  const OPTIMAL_SELF_CONSUMPTION_RATE = 0.65; // 65% = sweet spot for ROI
+  
+  // Calculate optimal solar capacity to cover 65% of consumption
+  const targetProduction = annualConsumption * OPTIMAL_SELF_CONSUMPTION_RATE;
+  const optimalCapacityKwc = targetProduction / SOLAR_PRODUCTION_PER_KWC;
+  
+  // Calculate investment (round to €250 increments)
+  const rawOptimal = optimalCapacityKwc * COST_PER_KWC;
+  const optimalInvestment = Math.round(rawOptimal / 250) * 250;
+  
+  // Define recommended range (±30% around optimal)
+  const minInvestment = Math.round((rawOptimal * 0.7) / 250) * 250;
+  const maxInvestment = Math.round((rawOptimal * 1.3) / 250) * 250;
+  
+  return {
+    optimal: Math.max(250, Math.min(50000, optimalInvestment)),
+    min: Math.max(250, Math.min(50000, minInvestment)),
+    max: Math.max(250, Math.min(50000, maxInvestment)),
+    selfConsumptionRate: OPTIMAL_SELF_CONSUMPTION_RATE,
+    annualConsumption,
+  };
+}
+
 export interface UserProfile {
   budget: number;
   objectives: string[];

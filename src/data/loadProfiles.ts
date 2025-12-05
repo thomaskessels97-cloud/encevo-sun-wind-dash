@@ -195,3 +195,19 @@ export function getProfileTypeName(podNumber: string): string {
       return ["Family", "Single Parent", "Business", "Single Person"][profileIndex];
   }
 }
+
+/**
+ * Get estimated annual consumption based on POD profile
+ * Sums hourly consumption and scales to annual
+ */
+export function getAnnualConsumptionByPod(podNumber: string): number {
+  const profile = getLoadProfileByPod(podNumber);
+  
+  // Sum daily consumption (kWh)
+  const dailyConsumption = profile.reduce((sum, point) => sum + point.consumption, 0);
+  
+  // Scale to annual (365 days)
+  const annualConsumption = dailyConsumption * 365;
+  
+  return Math.round(annualConsumption);
+}

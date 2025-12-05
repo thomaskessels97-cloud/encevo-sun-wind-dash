@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,8 +8,10 @@ import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, Home, TrendingUp, Leaf, Shield, Info, FileText, Zap, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Home, TrendingUp, Leaf, Shield, Info, FileText, Zap, CheckCircle2, Sparkles } from "lucide-react";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { calculateOptimalInvestment } from "@/lib/investmentCalculations";
+import { getAnnualConsumptionByPod } from "@/data/loadProfiles";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -305,25 +307,11 @@ export default function ProfilePage() {
         </Card>}
 
       {/* Step 3: Budget */}
-      {step === 3 && <Card className="p-8 space-y-6 animate-fade-in">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold">Investment Budget</h2>
-            <p className="text-muted-foreground">How much would you like to invest?</p>
-          </div>
-
-          <div className="space-y-4">
-            <Label>Investment Budget (€)</Label>
-            <div className="text-4xl font-bold text-primary">€{profile.budget.toLocaleString()}</div>
-            <Slider value={[profile.budget]} onValueChange={([value]) => setProfile({
-          ...profile,
-          budget: value
-        })} min={250} max={50000} step={250} className="py-4" />
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>€250</span>
-              <span>€50,000</span>
-            </div>
-          </div>
-        </Card>}
+      {step === 3 && <BudgetStep 
+        profile={profile} 
+        setProfile={setProfile} 
+        dataMode={dataMode} 
+      />}
 
       {/* Step 4: Objectives & Risk */}
       {step === 4 && <Card className="p-8 space-y-6 animate-fade-in">
@@ -415,4 +403,134 @@ export default function ProfilePage() {
         </Button>
       </div>
     </div>;
+}
+
+// Budget Step Component with Optimal Investment Indicator
+interface BudgetStepProps {
+  profile: {
+    podNumber: string;
+    consumption: number;
+    budget: number;
+    housingType: string;
+    energyTariff: string;
+    riskAppetite: string;
+    objectives: string[];
+  };
+  setProfile: React.Dispatch<React.SetStateAction<{
+    podNumber: string;
+    consumption: number;
+    budget: number;
+    housingType: string;
+    energyTariff: string;
+    riskAppetite: string;
+    objectives: string[];
+  }>>;
+  dataMode: "pod" | "manual";
+}
+
+function BudgetStep({ profile, setProfile, dataMode }: BudgetStepProps) {
+  const MIN_BUDGET = 250;
+  const MAX_BUDGET = 50000;
+
+  // Calculate optimal investment based on consumption source
+  const optimalData = useMemo(() => {
+    const consumption = dataMode === "pod" 
+      ? getAnnualConsumptionByPod(profile.podNumber)
+      : profile.consumption;
+    return calculateOptimalInvestment(consumption);
+  }, [dataMode, profile.podNumber, profile.consumption]);
+
+  // Calculate position percentage for the optimal indicator
+  const optimalPosition = ((optimalData.optimal - MIN_BUDGET) / (MAX_BUDGET - MIN_BUDGET)) * 100;
+  const minPosition = ((optimalData.min - MIN_BUDGET) / (MAX_BUDGET - MIN_BUDGET)) * 100;
+  const maxPosition = ((optimalData.max - MIN_BUDGET) / (MAX_BUDGET - MIN_BUDGET)) * 100;
+
+  return (
+    <Card className="p-8 space-y-6 animate-fade-in">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold">Investment Budget</h2>
+        <p className="text-muted-foreground">How much would you like to invest?</p>
+      </div>
+
+      <div className="space-y-6">
+        <Label>Investment Budget (€)</Label>
+        <div className="text-4xl font-bold text-primary">€{profile.budget.toLocaleString()}</div>
+        
+        {/* Slider with Optimal Indicator */}
+        <div className="relative pt-12 pb-4">
+          {/* Recommended Range Background */}
+          <div 
+            className="absolute top-12 h-2 bg-accent/20 rounded-full z-0"
+            style={{
+              left: `${minPosition}%`,
+              width: `${maxPosition - minPosition}%`,
+            }}
+          />
+          
+          {/* Optimal Investment Indicator */}
+          <div 
+            className="absolute top-0 flex flex-col items-center z-10"
+            style={{ left: `${optimalPosition}%`, transform: 'translateX(-50%)' }}
+          >
+            {/* Badge */}
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-accent text-accent-foreground rounded-full text-xs font-semibold whitespace-nowrap shadow-md">
+              <Sparkles className="w-3 h-3" />
+              €{optimalData.optimal.toLocaleString()} optimal
+            </div>
+            {/* Arrow */}
+            <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-accent" />
+            {/* Vertical Line */}
+            <div className="w-0.5 h-4 bg-accent" />
+          </div>
+
+          {/* The actual slider */}
+          <Slider 
+            value={[profile.budget]} 
+            onValueChange={([value]) => setProfile({
+              ...profile,
+              budget: value
+            })} 
+            min={MIN_BUDGET} 
+            max={MAX_BUDGET} 
+            step={250} 
+            className="relative z-20"
+          />
+        </div>
+        
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>€250</span>
+          <span>€50,000</span>
+        </div>
+
+        {/* Explanation Card */}
+        <div className="bg-accent/10 border border-accent/20 rounded-lg p-4 space-y-2">
+          <div className="flex items-center gap-2 text-sm font-medium text-accent-foreground">
+            <Sparkles className="w-4 h-4 text-accent" />
+            <span>AI-Recommended Investment</span>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {dataMode === "pod" ? (
+              <>
+                Based on your <strong>Leneda data</strong> ({optimalData.annualConsumption.toLocaleString()} kWh/year), 
+                €{optimalData.optimal.toLocaleString()} optimizes your self-consumption rate at ~65% — 
+                the sweet spot between investment and energy autonomy.
+              </>
+            ) : (
+              <>
+                Based on your estimated consumption of <strong>{optimalData.annualConsumption.toLocaleString()} kWh/year</strong>, 
+                €{optimalData.optimal.toLocaleString()} optimizes your self-consumption rate at ~65% — 
+                the sweet spot between investment and energy autonomy.
+              </>
+            )}
+          </p>
+          {dataMode === "manual" && (
+            <p className="text-xs text-muted-foreground flex items-center gap-1 pt-1">
+              <Info className="w-3 h-3" />
+              Use your POD number for more accurate recommendations
+            </p>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
 }
